@@ -20,3 +20,18 @@ export const toggleTodo = (id) => {
     id
   }
 }
+
+// now implementing this func
+export function fetchTodos() {
+  return dispatch => {
+   //dispatch(setLoading()); // Show a loading spinner
+    fetch(`http://default:4000/api/v1/todos`, (response) => {
+     //dispatch(doneFetching()); // Hide loading spinner
+      if(response.status == 200){
+        dispatch(todos(response.json, 'ADD_TODO')); // Use a normal function to set the received state
+      }else {
+        // dispatch()
+      }
+    })
+  }
+}
