@@ -27,9 +27,9 @@ module Todos
     # Skip views, helpers and assets when generating a new resource.
     config.api_only = true
     config.action_dispatch.default_headers = {
-      'Access-Control-Allow-Credentials' => 'true',
       'Access-Control-Allow-Origin' => '*',
-      'Access-Control-Request-Method' => '*'
+      'Access-Control-Request-Method' => '*',
+      'Access-Control-Allow-Headers:' => 'Origin, X-Requested-With, Content-Type, Accept'
     }
   end
 end

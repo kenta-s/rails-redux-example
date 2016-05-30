@@ -1,5 +1,5 @@
 let nextTodoId = 0
-export const addTodo = (text) => {
+export const addTodoTest = (text) => {
   return {
     type: 'ADD_TODO',
     id: nextTodoId++,
@@ -21,17 +21,30 @@ export const toggleTodo = (id) => {
   }
 }
 
-// now implementing this func
-export function fetchTodos() {
+// export function fetchTodos() {
+//   return dispatch => {
+//     return fetch('http://default:4000/api/v1/todos')
+//       .then(response => response.json())
+//       .then(json => dispatch(addTodo(json[0]["name"])));
+//   };
+// }
+
+export function addTodo(text) {
   return dispatch => {
-   //dispatch(setLoading()); // Show a loading spinner
-    fetch(`http://default:4000/api/v1/todos`, (response) => {
-     //dispatch(doneFetching()); // Hide loading spinner
-      if(response.status == 200){
-        dispatch(todos(response.json, 'ADD_TODO')); // Use a normal function to set the received state
-      }else {
-        // dispatch()
-      }
+    return fetch('http://default:4000/api/v1/todos', {
+      method: 'POST',
+      body: JSON.stringify({todo: {name: "text", status: "active"}})
     })
-  }
+      .then(response => response.json())
+      .then(json => dispatch(addTodoTest(json[0]["name"])));
+  };
 }
+// export function toggleTodo(id) {
+//   return dispatch => {
+//     return fetch('http://default:4000/api/v1/todo/' + id, {
+//       method: 'PATCH',
+//       body: new FormData({todo: {status: "completed"}})})
+//       .then(response => response.json())
+//       .then(json => dispatch(addTodo(json[0]["name"])));
+//   };
+// }
