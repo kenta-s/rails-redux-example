@@ -1,8 +1,8 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { addTodo } from '../actions'
+import { addPost } from '../actions'
 
-let AddTodo = ({ dispatch }) => {
+let AddPost = ({ dispatch }) => {
   let input
 
   return (
@@ -12,19 +12,19 @@ let AddTodo = ({ dispatch }) => {
         if (!input.value.trim()) {
           return
         }
-        dispatch(addTodo(input.value))
+        dispatch(addPost(input.value))
         input.value = ''
       }}>
         <input ref={node => {
           input = node
         }} />
         <button type="submit">
-          Add Todo
+          Add Post
         </button>
       </form>
     </div>
   )
 }
-AddTodo = connect()(AddTodo)
+AddPost = connect()(AddPost)
 
-export default AddTodo
+export default AddPost

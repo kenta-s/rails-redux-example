@@ -11,7 +11,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160528003948) do
+ActiveRecord::Schema.define(version: 20160531123905) do
+
+  create_table "posts", force: :cascade do |t|
+    t.string   "title",      null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["title"], name: "index_posts_on_title"
+  end
 
   create_table "todos", force: :cascade do |t|
     t.string   "name",                   null: false
