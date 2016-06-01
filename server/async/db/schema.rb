@@ -20,12 +20,4 @@ ActiveRecord::Schema.define(version: 20160531123905) do
     t.index ["title"], name: "index_posts_on_title"
   end
 
-  create_table "todos", force: :cascade do |t|
-    t.string   "name",                   null: false
-    t.integer  "status",     default: 0
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
-    t.index ["name"], name: "index_todos_on_name"
-  end
-
 end
