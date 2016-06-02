@@ -2,11 +2,9 @@ import fetch from 'isomorphic-fetch'
 
 export const REQUEST_POSTS = 'REQUEST_POSTS'
 export const RECEIVE_POSTS = 'RECEIVE_POSTS'
-export const SELECT_REDDIT = 'SELECT_REDDIT'
-export const INVALIDATE_REDDIT = 'INVALIDATE_REDDIT'
 export const ADD_POST = 'ADD_POST'
 
-export function addPostTest(post) {
+export function addPostForReducer(post) {
   return {
     type: ADD_POST,
     post
@@ -15,7 +13,7 @@ export function addPostTest(post) {
 
 export function addPost(post) {
   return dispatch => {
-    return fetch('http://default:4000/api/v1/posts', {
+    return fetch('http://localhost:3000/api/v1/posts', {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
@@ -24,65 +22,48 @@ export function addPost(post) {
       body: JSON.stringify({post: {title: post}})
     })
       .then(response => response.json())
-      .then(json => dispatch(addPostTest(json)));
+      .then(json => dispatch(addPostForReducer(json)));
   };
 }
 
-
-export function selectReddit(reddit) {
+function requestPosts() {
   return {
-    type: SELECT_REDDIT,
-    reddit
+    type: REQUEST_POSTS
   }
 }
 
-export function invalidateReddit(reddit) {
-  return {
-    type: INVALIDATE_REDDIT,
-    reddit
-  }
-}
-
-function requestPosts(reddit) {
-  return {
-    type: REQUEST_POSTS,
-    reddit
-  }
-}
-
-function receivePosts(reddit, json) {
+function receivePosts(json) {
   return {
     type: RECEIVE_POSTS,
-    posts: json,
-    reddit,
-    receivedAt: Date.now()
+    posts: json
   }
 }
 
-function fetchPosts(reddit) {
+function fetchPosts() {
   return dispatch => {
-    dispatch(requestPosts(reddit))
-    return fetch(`http://default:4000/api/v1/posts`)
+    dispatch(requestPosts())
+    return fetch(`http://localhost:3000/api/v1/posts`)
       .then(response => response.json())
-      .then(json => dispatch(receivePosts(reddit, json)))
+      .then(json => dispatch(receivePosts(json)))
   }
 }
 
-function shouldFetchPosts(state, reddit) {
-  const posts = state.postsByReddit[reddit]
-  if (!posts) {
+function shouldFetchPosts(state) {
+  const posts = state
+  if (!posts.items) {
     return true
   }
   if (posts.isFetching) {
     return false
+  }else{
+    return true
   }
-  return posts.didInvalidate
 }
 
-export function fetchPostsIfNeeded(reddit) {
+export function fetchPostsIfNeeded() {
   return (dispatch, getState) => {
-    if (shouldFetchPosts(getState(), reddit)) {
-      return dispatch(fetchPosts(reddit))
+    if (shouldFetchPosts(getState())) {
+      return dispatch(fetchPosts())
     }
   }
 }

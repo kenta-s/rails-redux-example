@@ -1,64 +1,43 @@
 import { combineReducers } from 'redux'
 import {
-  SELECT_REDDIT, INVALIDATE_REDDIT,
   REQUEST_POSTS, RECEIVE_POSTS, ADD_POST
 } from '../actions'
 
-function selectedReddit(state = 'reactjs', action) {
-  switch (action.type) {
-    case SELECT_REDDIT:
-      return action.reddit
-    default:
-      return state
-  }
-}
-
-function posts(state = {
+function preparePosts(state = {
   isFetching: false,
-  didInvalidate: false,
   items: []
 }, action) {
   switch (action.type) {
-    case INVALIDATE_REDDIT:
-      return Object.assign({}, state, {
-        didInvalidate: true
-      })
     case REQUEST_POSTS:
       return Object.assign({}, state, {
-        isFetching: true,
-        didInvalidate: false
+        isFetching: true
       })
     case RECEIVE_POSTS:
       return Object.assign({}, state, {
         isFetching: false,
-        didInvalidate: false,
-        items: action.posts,
-        lastUpdated: action.receivedAt
+        items: action.posts
       })
     default:
       return state
   }
 }
 
-function postsByReddit(state = { }, action) {
+function posts(state = {isFetching: true, items: []}, action) {
   switch (action.type) {
-    case INVALIDATE_REDDIT:
     case RECEIVE_POSTS:
     case REQUEST_POSTS:
-      return Object.assign({}, state, {
-        [action.reddit]: posts(state[action.reddit], action)
-      })
+      return Object.assign({}, state, preparePosts(state, action))
     case ADD_POST:
-      state["reactjs"].items = [...state["reactjs"].items, action.post]
-      return Object.assign({}, state)
+      let new_state = Object.assign({}, state)
+      new_state.items = [...state.items, action.post]
+      return Object.assign({}, state, preparePosts(new_state, action))
     default:
       return state
   }
 }
 
 const rootReducer = combineReducers({
-  postsByReddit,
-  selectedReddit
+  posts
 })
 
 export default rootReducer
